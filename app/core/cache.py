@@ -16,18 +16,21 @@ class Cache:
             cache_dir (str): Directory to store cache files
             default_ttl (int): Default time-to-live in seconds
         """
-        self.cache_dir = cache_dir
         self.default_ttl = default_ttl
         
         # Create cache directory if it doesn't exist
         try:
             os.makedirs(cache_dir, exist_ok=True)
+            self.cache_dir = cache_dir
         except Exception as e:
             # 如果无法创建目录，可能是生产环境只读文件系统
             # 尝试使用/tmp目录作为备选
             if cache_dir != '/tmp':
-                cache_dir = '/tmp'
-                os.makedirs(cache_dir, exist_ok=True)
+                self.cache_dir = '/tmp'
+                os.makedirs(self.cache_dir, exist_ok=True)
+            else:
+                # 如果连/tmp都失败，则无法使用缓存
+                raise
     
     def _get_cache_file_path(self, key):
         """

@@ -31,6 +31,12 @@ if os.environ.get('FLASK_ENV') == 'production':
     cache_dir = '/tmp'
 cache = Cache(cache_dir=cache_dir)
 
+# 将缓存实例存储到Flask配置中，供爬虫使用
+app.config['CACHE_INSTANCE'] = cache
+
+# 将缓存实例存储到Flask配置中，供爬虫使用
+app.config['CACHE_INSTANCE'] = cache
+
 # 注册蓝图
 app.register_blueprint(main_blueprint)
 

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import requests
 from bs4 import BeautifulSoup
-from app.core.cache import cache
+from flask import current_app
 
 class BaseSpider(ABC):
     """
@@ -47,9 +47,14 @@ class BaseSpider(ABC):
         
         # Try to get from cache first
         if use_cache:
-            cached_content = cache.get(cache_key)
-            if cached_content:
-                return cached_content
+            # 从Flask应用的缓存中获取
+            try:
+                cached_content = current_app.config.get('CACHE_INSTANCE').get(cache_key)
+                if cached_content:
+                    return cached_content
+            except Exception as e:
+                # 如果缓存不可用，继续正常获取
+                pass
         
         # Default headers
         if headers is None:
@@ -64,7 +69,11 @@ class BaseSpider(ABC):
         
         # Cache the result
         if use_cache:
-            cache.set(cache_key, content, self.cache_ttl)
+            try:
+                current_app.config.get('CACHE_INSTANCE').set(cache_key, content, self.cache_ttl)
+            except Exception as e:
+                # 如果缓存不可用，忽略错误
+                pass
         
         return content
     
