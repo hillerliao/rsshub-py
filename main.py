@@ -18,7 +18,7 @@ app.config.from_object(config_by_name[config_name])
 
 # 初始化缓存
 # 在Vercel上使用临时目录存储缓存，因为Vercel的文件系统大部分是只读的
-cache_dir = os.environ.get('TEMP_DIR', './cache')
+cache_dir = os.environ.get('TEMP_DIR', '/tmp')
 cache = Cache(cache_dir=cache_dir)
 
 # 注册蓝图
