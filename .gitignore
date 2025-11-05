@@ -40,7 +40,6 @@ pytest.xml
 
 # Cache
 .cache/
-./cash/
 .cache_dir/
 
 # Runtime data
