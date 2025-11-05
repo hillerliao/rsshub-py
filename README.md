@@ -1,4 +1,4 @@
-# RSS Generator
+# RSSHub-Py
 
 一个简单高效的多源RSS聚合服务，使用Python Flask框架开发。该项目支持从多个内容源（电子杂志、新闻、科技文章、博客等）抓取内容并生成标准的RSS订阅源。
 
@@ -41,8 +41,8 @@ runtime.txt          # Python版本指定
 1. 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/rss-generator.git
-cd rss-generator
+git clone https://github.com/yourusername/rsshub-py.git
+cd rsshub-py
 ```
 
 2. 创建虚拟环境
@@ -184,7 +184,7 @@ class MySourceSpider(BaseSpider):
 
 ## 许可证
 
-[MIT](LICENSE)
+本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件
 
 ## 贡献指南
 
