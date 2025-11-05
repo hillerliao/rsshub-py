@@ -6,14 +6,10 @@
       "use": "@vercel/python"
     }
   ],
-  "env": {
-    "PYTHON_VERSION": "3.12",
-    "TEMP_DIR": "/tmp"
-  },
-  "build": {
-    "env": {
-      "FLASK_ENV": "production"
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.py"
     }
-  },
-  "headers": []
+  ]
 }

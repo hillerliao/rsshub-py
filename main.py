@@ -35,11 +35,7 @@ def internal_server_error(e):
     """处理500错误"""
     return {'error': '服务器内部错误', 'message': '服务器遇到了一个问题，请稍后再试'}, 500
 
-# 健康检查端点
-@app.route('/health')
-def health_check():
-    """应用健康检查端点"""
-    return {'status': 'ok', 'service': 'rss-generator'}
+# 健康检查端点已在蓝图中定义
 
 # 主程序入口
 if __name__ == '__main__':
