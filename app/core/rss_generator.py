@@ -1,4 +1,5 @@
 import datetime
+import os
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 
@@ -26,7 +27,9 @@ def generate_rss(items, feed_title):
     title.text = f'{feed_title.title()} RSS Feed'
     
     link = SubElement(channel, 'link')
-    link.text = f'https://example.com/feeds/{feed_title}'
+    # 从环境变量读取RSS链接前缀，如果未设置则使用默认值
+    rss_feed_link = os.environ.get('RSS_FEED_LINK', 'https://rsshubpy.vercel.app')
+    link.text = f'{rss_feed_link}/{feed_title}'
     
     description = SubElement(channel, 'description')
     description.text = f'Latest updates from {feed_title.title()} source'

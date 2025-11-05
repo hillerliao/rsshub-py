@@ -28,7 +28,7 @@ class Config:
         
         # RSS配置
         self.RSS_FEED_TITLE = os.environ.get('RSS_FEED_TITLE', 'RSS Generator')
-        self.RSS_FEED_LINK = os.environ.get('RSS_FEED_LINK', 'https://example.com')
+        self.RSS_FEED_LINK = os.environ.get('RSS_FEED_LINK', 'https://rsshubpy.vercel.app')
         self.RSS_FEED_DESCRIPTION = os.environ.get('RSS_FEED_DESCRIPTION', 'RSS生成服务')
         
         # 日志配置
