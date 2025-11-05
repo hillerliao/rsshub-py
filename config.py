@@ -4,67 +4,65 @@ from datetime import timedelta
 class Config:
     """
     应用配置类
-    包含所有环境下共享的配置项
+    统一处理所有环境的配置，避免property问题
     """
-    # 基本配置
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    DEBUG = os.environ.get('FLASK_ENV') != 'production'
-    
-    # 缓存配置
-    CACHE_DIR = os.environ.get('CACHE_DIR') or './cache'
-    DEFAULT_CACHE_TTL = int(os.environ.get('DEFAULT_CACHE_TTL', 3600))  # 默认缓存1小时
-    
-    # 请求配置
-    REQUEST_TIMEOUT = int(os.environ.get('REQUEST_TIMEOUT', 30))  # 请求超时时间（秒）
-    MAX_RETRIES = int(os.environ.get('MAX_RETRIES', 3))  # 请求失败最大重试次数
-    
-    # RSS配置
-    RSS_FEED_TITLE = os.environ.get('RSS_FEED_TITLE', 'RSS Generator')
-    RSS_FEED_LINK = os.environ.get('RSS_FEED_LINK', 'https://example.com')
-    RSS_FEED_DESCRIPTION = os.environ.get('RSS_FEED_DESCRIPTION', '多源RSS聚合服务')
-    
-    # 日志配置
-    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
-    LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    
-    # API配置
-    API_RATE_LIMIT = int(os.environ.get('API_RATE_LIMIT', 60))  # 每分钟请求限制
+    def __init__(self):
+        # 基本配置
+        self.DEBUG = os.environ.get('FLASK_ENV') != 'production'
+        
+        # SECRET_KEY 统一处理
+        self.SECRET_KEY = os.environ.get('SECRET_KEY')
+        if not self.SECRET_KEY:
+            if os.environ.get('FLASK_ENV') == 'production':
+                raise ValueError('生产环境必须设置SECRET_KEY环境变量')
+            else:
+                self.SECRET_KEY = 'dev-secret-key-change-in-production'
+        
+        # 缓存配置
+        self.CACHE_DIR = os.environ.get('CACHE_DIR') or './cache'
+        self.DEFAULT_CACHE_TTL = int(os.environ.get('DEFAULT_CACHE_TTL', 3600))
+        
+        # 请求配置
+        self.REQUEST_TIMEOUT = int(os.environ.get('REQUEST_TIMEOUT', 30))
+        self.MAX_RETRIES = int(os.environ.get('MAX_RETRIES', 3))
+        
+        # RSS配置
+        self.RSS_FEED_TITLE = os.environ.get('RSS_FEED_TITLE', 'RSS Generator')
+        self.RSS_FEED_LINK = os.environ.get('RSS_FEED_LINK', 'https://example.com')
+        self.RSS_FEED_DESCRIPTION = os.environ.get('RSS_FEED_DESCRIPTION', 'RSS生成服务')
+        
+        # 日志配置
+        self.LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+        self.LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        
+        # API配置
+        self.API_RATE_LIMIT = int(os.environ.get('API_RATE_LIMIT', 60))
 
-class DevelopmentConfig(Config):
-    """
-    开发环境配置
-    """
-    DEBUG = True
-    LOG_LEVEL = 'DEBUG'
-    DEFAULT_CACHE_TTL = 300  # 开发环境缓存5分钟
+# 创建配置实例
+def get_config():
+    env = os.environ.get('FLASK_ENV', 'development')
+    
+    config = Config()
+    
+    # 根据环境调整特定配置
+    if env == 'development':
+        config.DEBUG = True
+        config.LOG_LEVEL = 'DEBUG'
+        config.DEFAULT_CACHE_TTL = 300
+    elif env == 'testing':
+        config.TESTING = True
+        config.DEBUG = False
+        config.DEFAULT_CACHE_TTL = 60
+    elif env == 'production':
+        config.DEBUG = False
+        config.LOG_LEVEL = 'INFO'
+    
+    return config
 
-class TestingConfig(Config):
-    """
-    测试环境配置
-    """
-    TESTING = True
-    WTF_CSRF_ENABLED = False
-    DEBUG = False
-    DEFAULT_CACHE_TTL = 60  # 测试环境缓存1分钟
-
-class ProductionConfig(Config):
-    """
-    生产环境配置
-    """
-    DEBUG = False
-    LOG_LEVEL = 'INFO'
-    # 生产环境应该从环境变量获取密钥
-    @property
-    def SECRET_KEY(self):
-        secret_key = os.environ.get('SECRET_KEY')
-        if not secret_key:
-            raise ValueError('生产环境必须设置SECRET_KEY环境变量')
-        return secret_key
-
-# 配置映射，用于根据环境变量选择配置类
+# 为了保持向后兼容性
 config_by_name = {
-    'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'production': ProductionConfig,
-    'default': DevelopmentConfig
+    'development': lambda: get_config(),
+    'testing': lambda: get_config(), 
+    'production': lambda: get_config(),
+    'default': lambda: get_config()
 }
