@@ -20,7 +20,14 @@ class Cache:
         self.default_ttl = default_ttl
         
         # Create cache directory if it doesn't exist
-        os.makedirs(cache_dir, exist_ok=True)
+        try:
+            os.makedirs(cache_dir, exist_ok=True)
+        except Exception as e:
+            # 如果无法创建目录，可能是生产环境只读文件系统
+            # 尝试使用/tmp目录作为备选
+            if cache_dir != '/tmp':
+                cache_dir = '/tmp'
+                os.makedirs(cache_dir, exist_ok=True)
     
     def _get_cache_file_path(self, key):
         """
