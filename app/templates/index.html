@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Generator - 多源RSS订阅服务</title>
+    <style>
+        /* 全局样式 */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-text: #666;
+            --background-color: #f5f7fa;
+            --card-color: #ffffff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding-bottom: 2rem;
+        }
+        
+        /* 容器和布局 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        /* 功能卡片 */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .card p {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* RSS源列表 */
+        .feeds-section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+        
+        .feeds-list {
+            background: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .feed-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feed-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feed-description {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .feed-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* 代码块样式 */
+        .code-section {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+        
+        pre {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #98c379;
+        }
+        
+        .code-string {
+            color: #e6c07b;
+        }
+        
+        .code-keyword {
+            color: #c678dd;
+        }
+        
+        /* 使用说明部分 */
+        .usage-section {
+            background: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .usage-step {
+            margin-bottom: 1.5rem;
+        }
+        
+        .usage-step h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .feed-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .feed-actions {
+                align-self: stretch;
+                justify-content: flex-end;
+            }
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--light-text);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>RSS Generator</h1>
+            <p class="subtitle">一站式多源RSS订阅服务，聚合各类内容，方便高效阅读</p>
+            <a href="#feeds" class="btn btn-primary">立即使用</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- 功能介绍 -->
+        <div class="card-container">
+            <div class="card">
+                <h2>多源聚合</h2>
+                <p>整合电子杂志、新闻、科技文章和博客等多种内容源，一站式获取所需信息</p>
+            </div>
+            <div class="card">
+                <h2>标准格式</h2>
+                <p>所有内容均输出为标准RSS格式，兼容各类RSS阅读器和应用</p>
+            </div>
+            <div class="card">
+                <h2>高效缓存</h2>
+                <p>智能缓存机制，提高访问速度，减轻源网站压力</p>
+            </div>
+        </div>
+        
+        <!-- RSS源列表 -->
+        <section id="feeds" class="feeds-section">
+            <h2 class="section-title">可用RSS源</h2>
+            <div class="feeds-list">
+                {% for feed in feeds %}
+                <div class="feed-item">
+                    <div class="feed-info">
+                        <h3>{{ feed | capitalize }}</h3>
+                        <p class="feed-description">提供{{ feed | capitalize }}内容的RSS订阅</p>
+                    </div>
+                    <div class="feed-actions">
+                        <a href="/{{ feed }}" class="btn btn-primary" target="_blank">获取RSS</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="feed-item">
+                    <div class="feed-info">
+                        <h3>暂无可用RSS源</h3>
+                        <p class="feed-description">请联系管理员添加RSS源</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        
+        <!-- API使用说明 -->
+        <section class="usage-section">
+            <h2 class="section-title">API使用说明</h2>
+            
+            <div class="usage-step">
+                <h3>获取RSS源</h3>
+                <p>访问以下格式的URL获取对应的RSS订阅源：</p>
+                <div class="code-section">
+                    <pre><span class="code-comment"># 通用RSS源获取格式</span>
+GET <span class="code-string">/{feed_name}</span></pre>
+                </div>
+                <p>其中{feed_name}为上方列表中的任意可用源名称。</p>
+            </div>
+            
+            <div class="usage-step">
+                <h3>获取所有可用源</h3>
+                <p>通过API获取所有可用的RSS源列表：</p>
+                <div class="code-section">
+                    <pre><span class="code-comment"># 获取所有可用RSS源</span>
+GET <span class="code-string">/api/feeds</span></pre>
+                </div>
+            </div>
+            
+            <div class="usage-step">
+                <h3>在RSS阅读器中使用</h3>
+                <p>1. 复制上方的RSS链接</p>
+                <p>2. 打开您的RSS阅读器（如Feedly、Inoreader等）</p>
+                <p>3. 添加新订阅，粘贴复制的链接</p>
+                <p>4. 完成！您将收到最新的内容更新</p>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>RSS Generator &copy; 2025 | 简单高效的RSS聚合服务</p>
+        </div>
+    </footer>
+</body>
+</html>

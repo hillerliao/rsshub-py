@@ -1,0 +1,21 @@
+# Web Framework
+flask==3.0.0
+
+# HTML Parsing
+beautifulsoup4==4.12.2
+requests==2.31.0
+lxml==4.9.3
+
+# Deployment
+gunicorn==20.1.0
+
+# Optional: For more complex caching
+redis==5.0.1  # If using Redis instead of file-based cache
+
+# Testing
+pytest==7.4.0
+pytest-cov==4.1.0
+
+# Development tools
+flake8==6.1.0
+black==23.9.1

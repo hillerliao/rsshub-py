@@ -1,0 +1,76 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+*.egg-info/
+.Python
+build/
+dist/
+develop-eggs/
+.installed.cfg
+*.egg
+
+# OSX
+.DS_Store
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.swp
+*.swo
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+pytest.xml
+
+# Cache
+.cache/
+.cache_dir/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Deployment
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+Thumbs.db
+
+# Vercel
+.vercel

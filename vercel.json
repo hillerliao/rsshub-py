@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.py"
+    }
+  ],
+  "env": {
+    "PYTHON_VERSION": "3.12",
+    "TEMP_DIR": "/tmp"
+  },
+  "build": {
+    "env": {
+      "FLASK_ENV": "production"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(?!api|health|$)[^/]*$",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/rss+xml"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    }
+  ]
+}
