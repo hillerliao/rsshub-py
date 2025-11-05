@@ -19,7 +19,7 @@ class Config:
                 self.SECRET_KEY = 'dev-secret-key-change-in-production'
         
         # 缓存配置
-        self.CACHE_DIR = os.environ.get('CACHE_DIR') or './cache'
+        self.CACHE_DIR = os.environ.get('CACHE_DIR') or '/tmp'
         self.DEFAULT_CACHE_TTL = int(os.environ.get('DEFAULT_CACHE_TTL', 3600))
         
         # 请求配置
